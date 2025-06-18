@@ -14,7 +14,7 @@ const Task = ({ id, title, isComplete, onToggleComplete, onDelete }) => {
       >
         {title}
       </button>
-      <button c
+      <button
       className="tasks__item__remove button"
       onClick={() => onDelete(id)}
       >
