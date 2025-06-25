@@ -10,13 +10,13 @@ const Task = ({ id, title, isComplete, onToggleComplete, onDelete }) => {
     <li className="tasks__item">
       <button
         className={`tasks__item__toggle ${buttonClass}`}
-        onClick={() => onToggleComplete(id)}
+        // onClick={() => onToggleComplete(id)}
       >
         {title}
       </button>
       <button
       className="tasks__item__remove button"
-      onClick={() => onDelete(id)}
+      // onClick={() => onDelete(id)}
       >
       x</button>
     </li>
@@ -27,8 +27,8 @@ Task.propTypes = {
   id: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
   isComplete: PropTypes.bool.isRequired,
-  onToggleComplete: PropTypes.func.isRequired,
-  onDelete:PropTypes.func.isRequired,
+  // onToggleComplete: PropTypes.func.isRequired,
+  // onDelete:PropTypes.func.isRequired,
 };
 
 export default Task;
