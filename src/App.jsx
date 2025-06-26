@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import TaskList from './components/TaskList.jsx';
 import './App.css';
-// import { useState } from 'react';
 import axios from 'axios';
 
 const messages = [
@@ -14,18 +13,23 @@ const kBaseUrl = 'http://localhost:5000';
 const getAllTasks = () => {
   return axios.get(`${kBaseUrl}/tasks`)
   .then(response => {
-    return response.data.map(convertFromAPI);
+    return response.data.map(convertFromAPItoJson);
   })
   .catch (error =>  {
     console.log(error);
   });
 };
 
+// const convertFromAPItoJson = (apiTask) => {
+//   const { id, title, isComplete, onToggleComplete, onDelete } = apiTask;
+//   const newTask = {id, title, isComplete, onToggleComplete, onDelete};
+//   return newTask;
+// }
+
 const convertFromAPItoJson = (apiTask) => {
-  const { id, title, isComplete, onToggleComplete, onDelete } = apiTask;
-  const newTask = {id, title, isComplete, onToggleComplete, onDelete};
-  return newTask;
-}
+  const { id, title, is_complete } = apiTask;
+  return { id, title, isComplete: is_complete };
+};
 
 const taskApi = (id) => {
   return axios.patch(`${kBaseUrl}/tasks/${id}`)
@@ -77,22 +81,27 @@ const App = () => {
       console.log(error);
     });
   };
-}
 
 
 const toggleTaskComplete = (id, isComplete) => {
   const endpoint = isComplete ? `/tasks/${id}/mark_incomplete` : `/tasks/${id}/mark_complete`;
-  axios.patch(`${kBaseURL}${endpoint}`)
+  
+  axios.patch(`${kBaseUrl}${endpoint}`)
   .then(() => {
-    const updatedTasks = tasks.map((task) =>
+    const updatedTasks = taskData.map((task) =>
       task.id === id ? { ...task, isComplete: !isComplete } : task
   );
-  setTasks(updatedTasks);
+  setTaskData(updatedTasks);
 })
 .catch((error) => {
   console.error('Error to toggling task:', error);
 });
-};
+
+ const deleteTask = (id) => {
+    return removeTaskApi(id).then(() => {
+      setTaskData(taskData => taskData.filter(task => task.id !== id));
+    });
+  };
 
   // const removeTask = id => {
   //   return removeTaskApi(id)
@@ -131,12 +140,12 @@ const toggleTaskComplete = (id, isComplete) => {
       <main>
         <TaskList
           tasks={taskData}
-          // onToggleComplete={toggleTaskComplete}
-          // onDelete={deleteTask}
+          onToggleComplete={toggleTaskComplete}
+          onDelete={deleteTask}
         />
       </main>
     </div>
   );
 };
-
+}
 export default App;
