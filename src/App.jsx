@@ -3,16 +3,28 @@ import TaskList from './components/TaskList.jsx';
 import './App.css';
 import axios from 'axios';
 
-const messages = [
-  { id: 1, title: 'Mow the lawn', isComplete: false },
-  { id: 2, title: 'Cook Pasta', isComplete: true },
-]
+// const messages = [
+//   { id: 1, title: 'Mow the lawn', isComplete: false },
+//   { id: 2, title: 'Cook Pasta', isComplete: true },
+// ]
 
-const kBaseUrl = 'http://localhost:5000';
+const kBaseUrl = 'http://127.0.0.1:5000';
 
 
 const App = () => {
-  const [taskData, setTaskData] = useState(messages);
+  // const [taskData, setTaskData] = useState(messages);
+  const [taskData, setTaskData] = useState([]);
+
+  useEffect(() => {
+    axios.get(`${kBaseUrl}/tasks`)
+      .then((response) => {
+        setTaskData(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
 
   // const toggleTaskComplete = (id) => {
   //   const updatedTasks = taskData.map((task) => {
@@ -26,7 +38,6 @@ const App = () => {
 
 const toggleTaskComplete = (id, isComplete) => {
   const status = isComplete ? `/mark_incomplete` : `/mark_complete`;
-  
   axios.patch(`${kBaseUrl}/tasks/${id}${status}`)
   .then(() => {
     const updatedTasks = taskData.map((task) =>
