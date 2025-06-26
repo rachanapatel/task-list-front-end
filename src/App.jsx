@@ -3,16 +3,9 @@ import TaskList from './components/TaskList.jsx';
 import './App.css';
 import axios from 'axios';
 
-// const messages = [
-//   { id: 1, title: 'Mow the lawn', isComplete: false },
-//   { id: 2, title: 'Cook Pasta', isComplete: true },
-// ]
-
 const kBaseUrl = 'http://127.0.0.1:5000';
 
-
 const App = () => {
-  // const [taskData, setTaskData] = useState(messages);
   const [taskData, setTaskData] = useState([]);
 
   useEffect(() => {
@@ -25,45 +18,30 @@ const App = () => {
       });
   }, []);
 
+  const toggleTaskComplete = (id, isComplete) => {
+    const status = isComplete ? `/mark_incomplete` : `/mark_complete`;
+    axios.patch(`${kBaseUrl}/tasks/${id}${status}`)
+      .then(() => {
+        const updatedTasks = taskData.map((task) =>
+          task.id === id ? { ...task, isComplete: !isComplete } : task
+        );
+        setTaskData(updatedTasks);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
-  // const toggleTaskComplete = (id) => {
-  //   const updatedTasks = taskData.map((task) => {
-  //     if (task.id === id) {
-  //       return { ...task, isComplete: !task.isComplete };
-  //     }
-  //     return task;
-  //   });
-  //   setTaskData(updatedTasks);
-  // };
-
-const toggleTaskComplete = (id, isComplete) => {
-  const status = isComplete ? `/mark_incomplete` : `/mark_complete`;
-  axios.patch(`${kBaseUrl}/tasks/${id}${status}`)
-  .then(() => {
-    const updatedTasks = taskData.map((task) =>
-      task.id === id ? { ...task, isComplete: !isComplete } : task
-  );
-  setTaskData(updatedTasks);
-})
-.catch((error) => {
-  console.error(error);
-});
-
-  // const deleteTask = (id) => {
-  //   const updatedTasks = taskData.filter((task) => task.id !== id);
-  //   setTaskData(updatedTasks);
-  // };
-
- const deleteTask = (id) => {
-  axios.delete(`${kBaseUrl}/tasks/${id}`)
-  .then(() => {
-    const updatedTasks = taskData.filter((task) => task.id !== id);
-    setTaskData(updatedTasks);
-    }).catch((error) => {
-      console.log(error)
-    })
-  }
-
+  const deleteTask = (id) => {
+    axios.delete(`${kBaseUrl}/tasks/${id}`)
+      .then(() => {
+        const updatedTasks = taskData.filter((task) => task.id !== id);
+        setTaskData(updatedTasks);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <div className="App">
@@ -80,5 +58,5 @@ const toggleTaskComplete = (id, isComplete) => {
     </div>
   );
 };
-}
+
 export default App;
