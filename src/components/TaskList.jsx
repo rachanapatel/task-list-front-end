@@ -11,8 +11,8 @@ const TaskList = ({ tasks, onToggleComplete, onDelete }) => {
           id={task.id}
           title={task.title}
           isComplete={task.isComplete}
-          // onToggleComplete={onToggleComplete}
-          // onDelete={onDelete}
+          onToggleComplete={onToggleComplete}
+          onDelete={onDelete}
         />
       );
     });
@@ -28,9 +28,9 @@ TaskList.propTypes = {
       title: PropTypes.string.isRequired,
       isComplete: PropTypes.bool.isRequired,
     }))
-  // .isRequired,
-  // onToggleComplete: PropTypes.func.isRequired,
-  // onDelete: PropTypes.func.isRequired,
+  .isRequired,
+  onToggleComplete: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
 };
 
 export default TaskList;
