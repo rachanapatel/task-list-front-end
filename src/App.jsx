@@ -1,18 +1,12 @@
 import { useState, useEffect } from 'react';
 import TaskList from './components/TaskList.jsx';
+import NewTaskForm from './components/NewTaskForm.jsx';
 import './App.css';
 import axios from 'axios';
 
-// const messages = [
-//   { id: 1, title: 'Mow the lawn', isComplete: false },
-//   { id: 2, title: 'Cook Pasta', isComplete: true },
-// ]
-
 const kBaseUrl = 'http://127.0.0.1:5000';
 
-
 const App = () => {
-  // const [taskData, setTaskData] = useState(messages);
   const [taskData, setTaskData] = useState([]);
 
   useEffect(() => {
@@ -25,6 +19,16 @@ const App = () => {
       });
   }, []);
 
+   const handleCreateTask = ({ title }) => {
+    axios.post(`${kBaseUrl}/tasks`, { title })
+      .then((response) => {
+        const newTask = response.data;
+        setTaskData(prev => [...prev, newTask]);
+      })
+      .catch((error) => {
+        console.error("Error creating task:", error);
+      });
+  }; 
 
   // const toggleTaskComplete = (id) => {
   //   const updatedTasks = taskData.map((task) => {
@@ -55,16 +59,17 @@ const App = () => {
   //   setTaskData(updatedTasks);
   // };
 
+
   const deleteTask = (id) => {
     axios.delete(`${kBaseUrl}/tasks/${id}`)
       .then(() => {
         const updatedTasks = taskData.filter((task) => task.id !== id);
         setTaskData(updatedTasks);
-      }).catch((error) => {
-        console.log(error)
       })
-  }
-
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <div className="App">
@@ -72,6 +77,7 @@ const App = () => {
         <h1>Ada&apos;s Task List</h1>
       </header>
       <main>
+        <NewTaskForm onTaskSubmit={handleCreateTask} />
         <TaskList
           tasks={taskData}
           onToggleComplete={toggleTaskComplete}
@@ -80,6 +86,6 @@ const App = () => {
       </main>
     </div>
   );
-  // };
-}
+
+};
 export default App;
