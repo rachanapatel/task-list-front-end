@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import TaskList from './components/TaskList.jsx';
+import NewTaskForm from './components/NewTaskForm.jsx';
 import './App.css';
 import axios from 'axios';
 
@@ -17,6 +18,17 @@ const App = () => {
         console.error(error);
       });
   }, []);
+
+   const handleCreateTask = ({ title }) => {
+    axios.post(`${kBaseUrl}/tasks`, { title })
+      .then((response) => {
+        const newTask = response.data;
+        setTaskData(prev => [...prev, newTask]);
+      })
+      .catch((error) => {
+        console.error("Error creating task:", error);
+      });
+  }; 
 
   const toggleTaskComplete = (id, isComplete) => {
     const status = isComplete ? `/mark_incomplete` : `/mark_complete`;
@@ -49,6 +61,7 @@ const App = () => {
         <h1>Ada&apos;s Task List</h1>
       </header>
       <main>
+        <NewTaskForm onTaskSubmit={handleCreateTask} />
         <TaskList
           tasks={taskData}
           onToggleComplete={toggleTaskComplete}
