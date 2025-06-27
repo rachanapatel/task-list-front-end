@@ -36,32 +36,33 @@ const App = () => {
   //   setTaskData(updatedTasks);
   // };
 
-const toggleTaskComplete = (id, isComplete) => {
-  const status = isComplete ? `/mark_incomplete` : `/mark_complete`;
-  axios.patch(`${kBaseUrl}/tasks/${id}${status}`)
-  .then(() => {
-    const updatedTasks = taskData.map((task) =>
-      task.id === id ? { ...task, isComplete: !isComplete } : task
-  );
-  setTaskData(updatedTasks);
-})
-.catch((error) => {
-  console.error(error);
-});
+  const toggleTaskComplete = (id, isComplete) => {
+    const status = isComplete ? `/mark_incomplete` : `/mark_complete`;
+    axios.patch(`${kBaseUrl}/tasks/${id}${status}`)
+      .then(() => {
+        const updatedTasks = taskData.map((task) =>
+          task.id === id ? { ...task, isComplete: !isComplete } : task
+        );
+        setTaskData(updatedTasks);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
 
   // const deleteTask = (id) => {
   //   const updatedTasks = taskData.filter((task) => task.id !== id);
   //   setTaskData(updatedTasks);
   // };
 
- const deleteTask = (id) => {
-  axios.delete(`${kBaseUrl}/tasks/${id}`)
-  .then(() => {
-    const updatedTasks = taskData.filter((task) => task.id !== id);
-    setTaskData(updatedTasks);
-    }).catch((error) => {
-      console.log(error)
-    })
+  const deleteTask = (id) => {
+    axios.delete(`${kBaseUrl}/tasks/${id}`)
+      .then(() => {
+        const updatedTasks = taskData.filter((task) => task.id !== id);
+        setTaskData(updatedTasks);
+      }).catch((error) => {
+        console.log(error)
+      })
   }
 
 
@@ -79,6 +80,6 @@ const toggleTaskComplete = (id, isComplete) => {
       </main>
     </div>
   );
-};
+  // };
 }
 export default App;
