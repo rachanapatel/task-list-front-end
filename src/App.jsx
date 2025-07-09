@@ -12,7 +12,12 @@ const App = () => {
   useEffect(() => {
     axios.get(`${kBaseUrl}/tasks`)
       .then((response) => {
-        setTaskData(response.data);
+        // setTaskData(response.data);
+        const normalizedTasks = response.data.map(task => ({
+          ...task,
+          isComplete: task.is_complete,
+        }));
+        setTaskData(normalizedTasks);
       })
       .catch((error) => {
         console.error(error);
@@ -20,9 +25,21 @@ const App = () => {
   }, []);
 
    const handleCreateTask = ({ title }) => {
-    axios.post(`${kBaseUrl}/tasks`, { title })
+    axios.post(`${kBaseUrl}/tasks`, { title, 
+      description: "No description provided"  
+    })
       .then((response) => {
-        const newTask = response.data;
+        console.log("New task response:", response.data);
+        // const newTask = response.data.task;
+        const newTask = {
+          id: response.data.task.id,
+          title: response.data.task.title ? response.data.task.title : title,
+          description: response.data.task.description,
+          completed_at: response.data.task.completed_at,
+          isComplete: response.data.task.is_complete  !== undefined ? response.data.task.is_complete : false,
+          goal_id: response.data.task.goal_id,
+        };
+        console.log("New task from API:", newTask);
         setTaskData(prev => [...prev, newTask]);
       })
       .catch((error) => {

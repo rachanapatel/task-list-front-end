@@ -4,6 +4,7 @@ import './TaskList.css';
 
 const TaskList = ({ tasks, onToggleComplete, onDelete }) => {
   const getTaskListJSX = (tasks) => {
+    // console.log("TaskList received tasks:", tasks);
     return tasks.map((task) => {
       return (
         <Task
